@@ -9,7 +9,7 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "traiHotels – The ease of buying a dream hotel",
+  title: "tripmongolia.mn – The ease of booking a dream hotel",
   description: "Find and buy your dream hotel property worldwide.",
 };
 

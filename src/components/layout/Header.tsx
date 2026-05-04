@@ -16,10 +16,13 @@ import {
 import { Menu, UserCircle } from "lucide-react";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Hotels for sale", href: "/hotels-for-sale" },
-  { label: "News", href: "/news" },
-  { label: "Contacts", href: "/contacts" },
+  { label: "Нүүр", href: "/" },
+  { label: "Зочид буудал", href: "/hotels" },
+  { label: "Амралтын газар", href: "/resorts" },
+  { label: "Орон сууц", href: "/guesthouses" },
+  { label: "Ресторанууд", href: "/restaurants" },
+//   { label: "Мэдээ", href: "/news" },
+  { label: "Холбоо барих", href: "/contacts" },
 ];
 
 export default function Header() {
@@ -31,8 +34,8 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="shrink-0">
           <span className="text-white text-2xl font-light tracking-tight">
-            <span className="font-serif italic">trai</span>
-            <span className="font-bold">Hotels</span>
+            <span className="font-serif italic">trip</span>
+            <span className="font-bold">Mongolia.mn</span>
           </span>
         </Link>
 
@@ -60,7 +63,7 @@ export default function Header() {
             variant="default"
             className="bg-black hover:bg-gray-900 text-white font-medium px-5 py-2 rounded-sm flex items-center gap-2 text-sm"
           >
-            Sign In
+            Нэвтрэх
             <UserCircle className="w-5 h-5" />
           </Button>
         </div>
@@ -86,7 +89,7 @@ export default function Header() {
               ))}
               <div className="mt-4 px-4">
                 <Button className="w-full bg-black hover:bg-gray-800 text-white flex items-center gap-2">
-                  Sign In
+                  Нэвтрэх
                   <UserCircle className="w-5 h-5" />
                 </Button>
               </div>
