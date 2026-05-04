@@ -74,7 +74,7 @@ export default function TopHotels() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <span className="border-l-4 border-gray-900 pl-3">Top</span>
-            <span className="font-light text-gray-500">hotels</span>
+            <span className="font-light text-gray-500">буудлууд</span>
           </h2>
         </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import {
   ChevronLeft,
@@ -11,12 +11,14 @@ import {
   Home,
   Utensils,
   ChevronDown,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 const slides = [
   {
     id: 1,
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
     heading: "The ease of buying",
     subheading: "a dream hotel",
   },
@@ -32,6 +34,12 @@ const slides = [
     heading: "Your perfect stay",
     subheading: "starts here",
   },
+  {
+    id: 4,
+    image: "/images/slider-4.jpg",
+    heading: "Experience elegance",
+    subheading: "in every detail",
+  },
 ];
 
 const searchTabs = [
@@ -41,35 +49,197 @@ const searchTabs = [
   { label: "Ресторанууд", icon: Utensils },
 ] as const;
 
-// Simple date helpers
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+// ── Date helpers ──────────────────────────────────────────────
+function today0(): Date {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function addDays(d: Date, n: number): Date {
+  const r = new Date(d);
+  r.setDate(r.getDate() + n);
+  return r;
+}
+function sameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+function inRange(d: Date, s: Date, e: Date): boolean {
+  return d > s && d < e;
+}
+function fmtShort(d: Date): string {
+  return d.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+function nightsBetween(a: Date, b: Date): number {
+  return Math.round((b.getTime() - a.getTime()) / 86400000);
 }
 
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// ── CalendarMonth sub-component ───────────────────────────────
+function CalendarMonth({
+  year,
+  month,
+  checkIn,
+  checkOut,
+  hovered,
+  selecting,
+  onSelect,
+  onHover,
+}: {
+  year: number;
+  month: number;
+  checkIn: Date;
+  checkOut: Date;
+  hovered: Date | null;
+  selecting: "in" | "out";
+  onSelect: (d: Date) => void;
+  onHover: (d: Date | null) => void;
+}) {
+  const tod = today0();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const rangeEnd = selecting === "out" && hovered ? hovered : checkOut;
+
+  const cells: (Date | null)[] = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
+
+  return (
+    <div className="flex-1 min-w-0">
+      <div className="text-center text-sm font-semibold text-gray-900 mb-3">
+        {MONTH_NAMES[month]} {year}
+      </div>
+      <div className="grid grid-cols-7 mb-1">
+        {DAY_NAMES.map((d) => (
+          <div key={d} className="text-center text-[11px] font-medium text-blue-600 py-1">
+            {d}
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-7">
+        {cells.map((date, i) => {
+          if (!date) return <div key={`e${i}`} className="h-9" />;
+          const past = date < tod;
+          const isIn = sameDay(date, checkIn);
+          const isOut = sameDay(date, checkOut);
+          const ranged = !past && !isIn && !isOut && inRange(date, checkIn, rangeEnd);
+          const isSat = date.getDay() === 6;
+          return (
+            <button
+              key={`${year}-${month}-${date.getDate()}`}
+              disabled={past}
+              onClick={() => !past && onSelect(date)}
+              onMouseEnter={() => !past && onHover(date)}
+              onMouseLeave={() => onHover(null)}
+              className={[
+                "h-9 text-sm flex items-center justify-center transition-colors",
+                past ? "text-gray-300 cursor-not-allowed" : "cursor-pointer",
+                isIn || isOut
+                  ? "bg-blue-600 text-white rounded-full font-semibold"
+                  : ranged
+                  ? "bg-blue-100 text-gray-900"
+                  : !past
+                  ? `hover:bg-gray-100 ${isSat ? "text-blue-600 font-medium" : "text-gray-800"}`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {date.getDate()}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [destination, setDestination] = useState("");
-  const [nights] = useState(1);
 
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + nights);
+  // Date range
+  const [checkIn, setCheckIn] = useState<Date>(() => today0());
+  const [checkOut, setCheckOut] = useState<Date>(() => addDays(today0(), 1));
+  const [showCal, setShowCal] = useState(false);
+  const [selecting, setSelecting] = useState<"in" | "out">("in");
+  const [hovered, setHovered] = useState<Date | null>(null);
 
-  const checkIn = formatDate(today);
-  const checkOut = formatDate(tomorrow);
+  // Calendar view (left month)
+  const [calMonth, setCalMonth] = useState(() => today0().getMonth());
+  const [calYear, setCalYear] = useState(() => today0().getFullYear());
+  const rightMonth = calMonth === 11 ? 0 : calMonth + 1;
+  const rightYear = calMonth === 11 ? calYear + 1 : calYear;
 
-  const prev = useCallback(() => {
-    setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1));
-  }, []);
+  // Guests
+  const [rooms, setRooms] = useState(1);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [showGuests, setShowGuests] = useState(false);
 
-  const next = useCallback(() => {
-    setCurrent((c) => (c === slides.length - 1 ? 0 : c + 1));
-  }, []);
+  // Outside-click refs
+  const calRef = useRef<HTMLDivElement>(null);
+  const guestsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setInterval(next, 6000);
-    return () => clearInterval(timer);
+    function onDown(e: MouseEvent) {
+      if (calRef.current && !calRef.current.contains(e.target as Node))
+        setShowCal(false);
+      if (guestsRef.current && !guestsRef.current.contains(e.target as Node))
+        setShowGuests(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  function handleDaySelect(date: Date) {
+    if (selecting === "in") {
+      setCheckIn(date);
+      setCheckOut(addDays(date, 1));
+      setSelecting("out");
+    } else {
+      if (date <= checkIn) {
+        setCheckIn(date);
+        setCheckOut(addDays(date, 1));
+        setSelecting("out");
+      } else {
+        setCheckOut(date);
+        setShowCal(false);
+        setSelecting("in");
+      }
+    }
+  }
+
+  function prevMonth() {
+    if (calMonth === 0) { setCalMonth(11); setCalYear((y) => y - 1); }
+    else setCalMonth((m) => m - 1);
+  }
+  function nextMonth() {
+    if (calMonth === 11) { setCalMonth(0); setCalYear((y) => y + 1); }
+    else setCalMonth((m) => m + 1);
+  }
+
+  const nights = nightsBetween(checkIn, checkOut);
+
+  const prev = useCallback(() => setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1)), []);
+  const next = useCallback(() => setCurrent((c) => (c === slides.length - 1 ? 0 : c + 1)), []);
+  useEffect(() => {
+    const t = setInterval(next, 6000);
+    return () => clearInterval(t);
   }, [next]);
 
   return (
@@ -139,10 +309,10 @@ export default function HeroSlider() {
       {/* Search Panel */}
       <div className="absolute bottom-0 left-0 right-0 z-20">
         <div className="max-w-350 mx-auto px-6">
-          <div className="bg-white shadow-2xl rounded-t-xl overflow-hidden">
+          <div className="bg-white shadow-2xl rounded-t-xl overflow-visible">
 
             {/* Tab Bar */}
-            <div className="bg-gray-900 px-2 pt-2 flex gap-1 overflow-x-auto">
+            <div className="bg-gray-900 px-2 pt-2 flex gap-1 overflow-x-auto rounded-t-xl">
               {searchTabs.map((tab, i) => {
                 const Icon = tab.icon;
                 const isActive = i === activeTab;
@@ -164,8 +334,9 @@ export default function HeroSlider() {
             </div>
 
             {/* Search Form */}
-            <div className="px-4 py-4">
-              <div className="flex items-stretch gap-0 border border-gray-200 rounded-lg overflow-hidden">
+            <div className="px-4 py-4 relative">
+              <div className="flex items-stretch border border-gray-200 rounded-lg overflow-visible">
+
                 {/* Destination */}
                 <div className="flex-1 min-w-0 px-4 py-3 border-r border-gray-200">
                   <div className="text-xs text-gray-500 mb-1">Хаана</div>
@@ -179,41 +350,165 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Check-in */}
-                <div className="px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-32">
-                  <div className="text-xs text-gray-500 mb-1">Орох</div>
-                  <div className="text-sm font-semibold text-gray-800">{checkIn}</div>
+                <div
+                  className={`px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-36 select-none ${
+                    showCal && selecting === "in" ? "bg-blue-50" : ""
+                  }`}
+                  onClick={() => { setSelecting("in"); setShowCal(true); setShowGuests(false); }}
+                >
+                  <div className={`text-xs font-semibold mb-1 ${showCal && selecting === "in" ? "text-blue-600 border-b border-blue-500 pb-0.5" : "text-gray-500"}`}>
+                    Орох
+                  </div>
+                  <div className="text-sm font-semibold text-gray-800">{fmtShort(checkIn)}</div>
                 </div>
 
-                {/* Nights */}
-                <div className="px-3 py-3 border-r border-gray-200 flex flex-col items-center justify-center bg-gray-50">
-                  <span className="text-xs text-gray-500">{nights} шөнө</span>
+                {/* Nights badge */}
+                <div className="px-3 py-3 border-r border-gray-200 flex flex-col items-center justify-center bg-gray-50 min-w-16">
+                  <span className="text-sm font-semibold text-gray-700">{nights}</span>
+                  <span className="text-[10px] text-gray-400">шөнө</span>
                 </div>
 
                 {/* Check-out */}
-                <div className="px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-32">
-                  <div className="text-xs text-gray-500 mb-1">Гарах</div>
-                  <div className="text-sm font-semibold text-gray-800">{checkOut}</div>
+                <div
+                  className={`px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-36 select-none ${
+                    showCal && selecting === "out" ? "bg-blue-50" : ""
+                  }`}
+                  onClick={() => { setSelecting("out"); setShowCal(true); setShowGuests(false); }}
+                >
+                  <div className={`text-xs font-semibold mb-1 ${showCal && selecting === "out" ? "text-blue-600 border-b border-blue-500 pb-0.5" : "text-gray-500"}`}>
+                    Гарах
+                  </div>
+                  <div className="text-sm font-semibold text-gray-800">{fmtShort(checkOut)}</div>
                 </div>
 
                 {/* Rooms & Guests */}
-                <div className="flex items-center gap-2 px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-52">
+                <div
+                  ref={guestsRef}
+                  className="relative flex items-center gap-2 px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-52 select-none"
+                  onClick={() => { setShowGuests((v) => !v); setShowCal(false); }}
+                >
                   <div className="flex-1">
                     <div className="text-xs text-gray-500 mb-1">Өрөө ба зочид</div>
-                    <div className="text-sm font-semibold text-gray-800">1 өрөө, 2 насанд хүрэгчид, 0 хүүхэд</div>
+                    <div className="text-sm font-semibold text-gray-800">
+                      {rooms} өрөө, {adults} насанд хүрэгч, {children} хүүхэд
+                    </div>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+                  <ChevronDown className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${showGuests ? "rotate-180" : ""}`} />
+
+                  {/* Guests dropdown */}
+                  {showGuests && (
+                    <div
+                      className="absolute bottom-full right-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-72 z-50"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {(
+                        [
+                          { label: "Rooms", sub: "", value: rooms, min: 1, onChange: setRooms },
+                          { label: "Adults", sub: "18+ yrs", value: adults, min: 1, onChange: setAdults },
+                          { label: "Children", sub: "0–17 yrs", value: children, min: 0, onChange: setChildren },
+                        ] as { label: string; sub: string; value: number; min: number; onChange: (v: number) => void }[]
+                      ).map(({ label, sub, value, min, onChange }) => (
+                        <div key={label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                          <div>
+                            <span className="text-sm font-semibold text-gray-900">{label}</span>
+                            {sub && <span className="text-xs text-gray-400 ml-1.5">{sub}</span>}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => onChange(Math.max(min, value - 1))}
+                              disabled={value <= min}
+                              className="w-7 h-7 rounded-full border-2 border-blue-600 flex items-center justify-center text-blue-600 hover:bg-blue-50 disabled:border-gray-200 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="text-sm font-semibold w-4 text-center">{value}</span>
+                            <button
+                              onClick={() => onChange(value + 1)}
+                              className="w-7 h-7 rounded-full border-2 border-blue-600 flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-colors"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => setShowGuests(false)}
+                        className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 rounded-lg transition-colors"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Search Button */}
-                <button className="flex items-center gap-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors">
+                <button className="flex items-center gap-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors rounded-r-lg">
                   <Search className="w-4 h-4" />
                   Хайх
                 </button>
               </div>
 
-            
-            </div>
+              {/* Calendar dropdown */}
+              {showCal && (
+                <div
+                  ref={calRef}
+                  className="absolute bottom-full left-4 right-4 mb-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-5 z-50"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Prev month */}
+                    <button
+                      onClick={prevMonth}
+                      className="mt-0.5 w-8 h-8 shrink-0 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-600"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
 
+                    {/* Left month */}
+                    <CalendarMonth
+                      year={calYear}
+                      month={calMonth}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                      hovered={hovered}
+                      selecting={selecting}
+                      onSelect={handleDaySelect}
+                      onHover={setHovered}
+                    />
+
+                    <div className="w-px bg-gray-200 self-stretch mx-1" />
+
+                    {/* Right month */}
+                    <CalendarMonth
+                      year={rightYear}
+                      month={rightMonth}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                      hovered={hovered}
+                      selecting={selecting}
+                      onSelect={handleDaySelect}
+                      onHover={setHovered}
+                    />
+
+                    {/* Next month */}
+                    <button
+                      onClick={nextMonth}
+                      className="mt-0.5 w-8 h-8 shrink-0 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-600"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col items-end gap-0.5">
+                    <span className="text-sm text-gray-700">
+                      {fmtShort(checkIn)} – {fmtShort(checkOut)}{" "}
+                      <strong>({nights} night{nights !== 1 ? "s" : ""})</strong>
+                    </span>
+                    <span className="text-xs text-gray-400">All dates are in local time</span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
