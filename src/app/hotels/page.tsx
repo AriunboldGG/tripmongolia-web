@@ -1,4 +1,4 @@
-import HotelsCatalogPage from "@/app/pages/hotels";
+import HotelsCatalogPage from "../pages/hotels";
 
 export default function HotelsPage() {
   return <HotelsCatalogPage />;
