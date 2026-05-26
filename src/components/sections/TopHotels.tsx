@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { MapPin, BedDouble, ChevronLeft, ChevronRight } from "lucide-react";
@@ -18,7 +19,7 @@ interface Hotel {
 const hotels: Hotel[] = [
   {
     id: 1,
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
     description: null,
     price: "$ 18,000,000.00",
     location: "Venice, Italia",
@@ -26,8 +27,8 @@ const hotels: Hotel[] = [
   },
   {
     id: 2,
-    image: null,
-    description: "The luxury 5-star hotel is located within the historic central area of the city...",
+    image: "/images/slider4.jpg",
+    description: null,
     price: "$ 15,000,000.00",
     location: "Texas, United State...",
     rooms: 330,
@@ -50,7 +51,7 @@ const hotels: Hotel[] = [
   },
   {
     id: 5,
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
     description: null,
     price: "$ 12,000,000.00",
     location: "Paris, France",
@@ -68,11 +69,11 @@ export default function TopHotels() {
   const visibleHotels = hotels.slice(page * CARDS_PER_PAGE, page * CARDS_PER_PAGE + CARDS_PER_PAGE);
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-350 mx-auto px-6">
+    <section className="py-10 sm:py-12 bg-gray-50">
+      <div className="max-w-5xl mx-auto px-2 sm:px-6">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <div className="flex items-center justify-between mb-6 gap-3">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
             <span className="border-l-4 border-gray-900 pl-3">Top</span>
             <span className="font-light text-gray-500">буудлууд</span>
           </h2>
@@ -85,13 +86,13 @@ export default function TopHotels() {
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
             aria-label="Previous"
-            className="absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           {/* Cards Grid */}
-          <div ref={trackRef} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div ref={trackRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {visibleHotels.map((hotel) => (
               <Card
                 key={hotel.id}
@@ -150,12 +151,14 @@ export default function TopHotels() {
                     <span>{hotel.rooms} rooms</span>
                   </div>
                   {/* CTA */}
-                  <Button
-                    variant="outline"
-                    className="w-full h-8 text-xs font-semibold tracking-wide border-gray-300 hover:bg-gray-100 rounded"
-                  >
-                    SHOW MORE...
-                  </Button>
+                  <Link href="/hotels" className="block">
+                    <Button
+                      variant="outline"
+                      className="w-full h-8 text-xs font-semibold tracking-wide border-gray-300 hover:bg-gray-100 rounded"
+                    >
+                      SHOW MORE...
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -166,14 +169,14 @@ export default function TopHotels() {
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page >= totalPages - 1}
             aria-label="Next"
-            className="absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
         {/* Footer: dots + view more */}
-        <div className="flex items-center justify-between mt-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6">
           <div className="flex gap-2">
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
@@ -186,9 +189,11 @@ export default function TopHotels() {
               />
             ))}
           </div>
-          <Button variant="outline" className="rounded-full text-sm px-5 border-gray-300 hover:bg-gray-100">
-            View more...
-          </Button>
+          <Link href="/hotels" className="w-full sm:w-auto">
+            <Button variant="outline" className="w-full sm:w-auto rounded-full text-sm px-5 border-gray-300 hover:bg-gray-100">
+              View more...
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

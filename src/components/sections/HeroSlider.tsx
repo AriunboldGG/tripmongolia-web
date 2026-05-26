@@ -19,26 +19,26 @@ const slides = [
   {
     id: 1,
     image: "/images/slider-1.jpg",
-    heading: "The ease of buying",
-    subheading: "a dream hotel",
+    heading: "Дархан хотод зочлох",
+    subheading: "тансаг зочид буудлууд",
   },
   {
     id: 2,
     image: "/images/slider-2.jpg",
-    heading: "Discover luxury",
-    subheading: "properties worldwide",
+    heading: "Дээд зэрэглэлийн",
+    subheading: "амралтын газрууд",
   },
   {
     id: 3,
     image: "/images/slider-3.jpg",
-    heading: "Your perfect stay",
-    subheading: "starts here",
+    heading: "Орон сууц түрээслэх",
+    subheading: "өргөн сонголтууд",
   },
   {
     id: 4,
-    image: "/images/slider-4.jpg",
-    heading: "Experience elegance",
-    subheading: "in every detail",
+    image: "/images/slider4.jpg",
+    heading: "Тансаг байдлыг мэдрэх",
+    subheading: "ресторанууд",
   },
 ];
 
@@ -243,9 +243,9 @@ export default function HeroSlider() {
   }, [next]);
 
   return (
-    <section className="relative w-full overflow-hidden" style={{ height: "820px" }}>
+    <section className="relative w-full overflow-hidden min-h-[780px] sm:min-h-[860px] lg:h-[820px]">
       {/* Slides */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 h-full">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -267,10 +267,10 @@ export default function HeroSlider() {
       </div>
 
       {/* Hero Text */}
-      <div className="relative z-10 flex flex-col justify-center h-full max-w-350 mx-auto px-6 pb-56">
+      <div className="relative z-10 flex h-full flex-col justify-center max-w-5xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-[23rem] sm:pb-64 lg:pb-56">
         <h1 className="text-white font-bold leading-tight drop-shadow-lg max-w-xl">
-          <span className="block text-5xl xl:text-6xl">{slides[current].heading}</span>
-          <span className="block text-5xl xl:text-6xl">{slides[current].subheading}</span>
+          <span className="block text-3xl sm:text-5xl xl:text-6xl">{slides[current].heading}</span>
+          <span className="block mt-1 text-3xl sm:text-5xl xl:text-6xl">{slides[current].subheading}</span>
         </h1>
       </div>
 
@@ -278,22 +278,22 @@ export default function HeroSlider() {
       <button
         onClick={prev}
         aria-label="Previous slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
       >
-        <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
+        <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" strokeWidth={1.5} />
       </button>
 
       {/* Next Arrow */}
       <button
         onClick={next}
         aria-label="Next slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white/80 hover:text-white transition-colors"
       >
-        <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
+        <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" strokeWidth={1.5} />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-44 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div className="absolute bottom-[20.5rem] sm:bottom-44 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -308,11 +308,11 @@ export default function HeroSlider() {
 
       {/* Search Panel */}
       <div className="absolute bottom-0 left-0 right-0 z-20">
-        <div className="max-w-350 mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6">
           <div className="bg-white shadow-2xl rounded-t-xl overflow-visible">
 
             {/* Tab Bar */}
-            <div className="bg-gray-900 px-2 pt-2 flex gap-1 overflow-x-auto rounded-t-xl">
+            <div className="bg-gray-900 px-1 sm:px-2 pt-2 flex gap-1 overflow-x-auto rounded-t-xl">
               {searchTabs.map((tab, i) => {
                 const Icon = tab.icon;
                 const isActive = i === activeTab;
@@ -334,11 +334,11 @@ export default function HeroSlider() {
             </div>
 
             {/* Search Form */}
-            <div className="px-4 py-4 relative">
-              <div className="flex items-stretch border border-gray-200 rounded-lg overflow-visible">
+            <div className="px-2 sm:px-4 py-4 relative">
+              <div className="flex flex-col md:flex-row items-stretch border border-gray-200 rounded-lg overflow-visible">
 
                 {/* Destination */}
-                <div className="flex-1 min-w-0 px-4 py-3 border-r border-gray-200">
+                <div className="flex-1 min-w-0 px-2 sm:px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200">
                   <div className="text-xs text-gray-500 mb-1">Хаана</div>
                   <input
                     type="text"
@@ -351,7 +351,7 @@ export default function HeroSlider() {
 
                 {/* Check-in */}
                 <div
-                  className={`px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-36 select-none ${
+                  className={`px-2 sm:px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-32 sm:min-w-36 select-none ${
                     showCal && selecting === "in" ? "bg-blue-50" : ""
                   }`}
                   onClick={() => { setSelecting("in"); setShowCal(true); setShowGuests(false); }}
@@ -363,14 +363,14 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Nights badge */}
-                <div className="px-3 py-3 border-r border-gray-200 flex flex-col items-center justify-center bg-gray-50 min-w-16">
+                <div className="px-2 sm:px-3 py-3 border-b md:border-b-0 md:border-r border-gray-200 flex flex-col items-center justify-center bg-gray-50 min-w-14 sm:min-w-16">
                   <span className="text-sm font-semibold text-gray-700">{nights}</span>
                   <span className="text-[10px] text-gray-400">шөнө</span>
                 </div>
 
                 {/* Check-out */}
                 <div
-                  className={`px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-36 select-none ${
+                  className={`px-2 sm:px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-32 sm:min-w-36 select-none ${
                     showCal && selecting === "out" ? "bg-blue-50" : ""
                   }`}
                   onClick={() => { setSelecting("out"); setShowCal(true); setShowGuests(false); }}
@@ -384,7 +384,7 @@ export default function HeroSlider() {
                 {/* Rooms & Guests */}
                 <div
                   ref={guestsRef}
-                  className="relative flex items-center gap-2 px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-52 select-none"
+                  className="relative flex items-center gap-2 px-2 sm:px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors min-w-44 sm:min-w-52 select-none"
                   onClick={() => { setShowGuests((v) => !v); setShowCal(false); }}
                 >
                   <div className="flex-1">
@@ -403,9 +403,9 @@ export default function HeroSlider() {
                     >
                       {(
                         [
-                          { label: "Rooms", sub: "", value: rooms, min: 1, onChange: setRooms },
-                          { label: "Adults", sub: "18+ yrs", value: adults, min: 1, onChange: setAdults },
-                          { label: "Children", sub: "0–17 yrs", value: children, min: 0, onChange: setChildren },
+                          { label: "Өрөө", sub: "", value: rooms, min: 1, onChange: setRooms },
+                          { label: "Насанд хүрсэн", sub: "18+ нас", value: adults, min: 1, onChange: setAdults },
+                          { label: "Хүүхдүүд", sub: "0–17 нас", value: children, min: 0, onChange: setChildren },
                         ] as { label: string; sub: string; value: number; min: number; onChange: (v: number) => void }[]
                       ).map(({ label, sub, value, min, onChange }) => (
                         <div key={label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
@@ -442,7 +442,7 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Search Button */}
-                <button className="flex items-center gap-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors rounded-r-lg">
+                <button className="flex w-full md:w-auto items-center justify-center gap-2 px-4 py-3 md:px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors rounded-b-lg md:rounded-b-none md:rounded-r-lg">
                   <Search className="w-4 h-4" />
                   Хайх
                 </button>
@@ -452,9 +452,9 @@ export default function HeroSlider() {
               {showCal && (
                 <div
                   ref={calRef}
-                  className="absolute bottom-full left-4 right-4 mb-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-5 z-50"
+                  className="absolute bottom-full left-0 right-0 md:left-4 md:right-4 mb-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-3 sm:p-5 z-50"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     {/* Prev month */}
                     <button
                       onClick={prevMonth}
@@ -475,19 +475,21 @@ export default function HeroSlider() {
                       onHover={setHovered}
                     />
 
-                    <div className="w-px bg-gray-200 self-stretch mx-1" />
+                    <div className="hidden md:block w-px bg-gray-200 self-stretch mx-1" />
 
                     {/* Right month */}
-                    <CalendarMonth
-                      year={rightYear}
-                      month={rightMonth}
-                      checkIn={checkIn}
-                      checkOut={checkOut}
-                      hovered={hovered}
-                      selecting={selecting}
-                      onSelect={handleDaySelect}
-                      onHover={setHovered}
-                    />
+                    <div className="hidden md:block flex-1 min-w-0">
+                      <CalendarMonth
+                        year={rightYear}
+                        month={rightMonth}
+                        checkIn={checkIn}
+                        checkOut={checkOut}
+                        hovered={hovered}
+                        selecting={selecting}
+                        onSelect={handleDaySelect}
+                        onHover={setHovered}
+                      />
+                    </div>
 
                     {/* Next month */}
                     <button

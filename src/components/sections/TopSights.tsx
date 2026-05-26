@@ -53,10 +53,10 @@ export default function TopSights() {
   };
 
   return (
-    <section className="py-10 px-6 max-w-350 mx-auto">
+    <section className="py-10 px-4 sm:px-6 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
           Үзвэр үйлчилгээ
         </h2>
         <a
@@ -108,7 +108,7 @@ export default function TopSights() {
               </button>
 
               {/* Location + score overlay */}
-              <div className="absolute bottom-3 left-3 flex items-center gap-2">
+              <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-2">
                 <span className="bg-white/90 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-sm">
                   {sight.location}
                 </span>

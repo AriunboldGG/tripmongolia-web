@@ -11,7 +11,7 @@ const featured = [
     sourceColor: "bg-red-600",
     title: "Italy Venice seeks more investment in the real estate...",
     date: "May 27, 2026",
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
   },
   {
     id: 2,
@@ -39,7 +39,7 @@ const moreNews = [
     title: "Italy Venice seeks more investment in the real estate world.",
     excerpt: "Italy Venice seeks more investment in the real estate world.",
     date: "May 3, 2026",
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
   },
   {
     id: 2,
@@ -68,7 +68,7 @@ const moreNews = [
     title: "Italy Venice seeks more investment in the real estate world.",
     excerpt: "Italy Venice seeks more investment in the real estate world.",
     date: "May 3, 2026",
-    image: "/images/slider-1.png",
+    image: "/images/slider-1.jpg",
   },
 ];
 
@@ -77,18 +77,18 @@ export default function TodayNews() {
   const article = featured[current];
 
   return (
-    <section className="py-10 px-6 max-w-350 mx-auto">
+    <section className="py-10 px-4 sm:px-6 max-w-5xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Featured article */}
         <div className="lg:col-span-2">
           {/* Title */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
             <span className="font-black">Today</span>{" "}
             <span className="font-light text-gray-500">news</span>
           </h2>
 
           {/* Featured card */}
-          <div className="relative rounded-xl overflow-hidden bg-gray-900 h-80 cursor-pointer group">
+          <div className="relative rounded-xl overflow-hidden bg-gray-900 h-64 sm:h-80 cursor-pointer group">
             <Image
               src={article.image}
               alt={article.title}
@@ -102,7 +102,7 @@ export default function TodayNews() {
             {/* Bottom info */}
             <div className="absolute bottom-0 left-0 right-0 p-5">
               {/* Source badge */}
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span
                   className={`${article.sourceColor} text-white text-[10px] font-bold px-2 py-0.5 rounded-sm`}
                 >
@@ -110,7 +110,7 @@ export default function TodayNews() {
                 </span>
                 <span className="text-white/80 text-sm">{article.source}</span>
               </div>
-              <h3 className="text-white text-xl font-bold leading-snug mb-1">
+              <h3 className="text-white text-lg sm:text-xl font-bold leading-snug mb-1">
                 {article.title}
               </h3>
               <p className="text-white/60 text-xs">{article.date}</p>
@@ -137,7 +137,7 @@ export default function TodayNews() {
         {/* Right: More news */}
         <div className="flex flex-col">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">More news</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">More news</h2>
           </div>
 
           <div className="flex flex-col gap-3 flex-1">
@@ -149,8 +149,8 @@ export default function TodayNews() {
                 {/* Text */}
                 <div className="flex-1 min-w-0">
                   {/* Source row */}
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <span
                         className={`${item.sourceColor} text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm`}
                       >

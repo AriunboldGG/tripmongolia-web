@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-100 border-t border-gray-200">
       {/* Main footer content */}
-      <div className="max-w-350 mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Column 1: Logo + Contact */}
           <div className="flex flex-col gap-5">
@@ -32,7 +32,7 @@ export default function Footer() {
                 ))}
               </div>
               <span className="text-gray-900 text-lg font-bold tracking-tight">
-                tripMongolia
+                goDarkhan
               </span>
             </Link>
 
@@ -120,7 +120,7 @@ export default function Footer() {
           {/* Column 3: Partners */}
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-3 pb-2 border-b border-gray-300">
-              Our Partners
+              Хамтрагч байгууллагууд
             </p>
             <ul className="flex flex-col gap-2">
               {partners.map((p) => (
@@ -146,9 +146,9 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-gray-200 py-4 px-6">
+      <div className="border-t border-gray-200 py-4 px-4 sm:px-6">
         <p className="text-center text-xs text-gray-400">
-          by tripMongolia.mn
+          by goDarkhan.mn
         </p>
       </div>
     </footer>

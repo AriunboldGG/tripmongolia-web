@@ -9,8 +9,8 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "tripmongolia.mn – The ease of booking a dream hotel",
-  description: "Find and buy your dream hotel property worldwide.",
+  title: "goDarkhan.mn – Дархан хотын портал вебсайт",
+  description: "Та хүссэн бүх мэдээллийг нэг дороос авах боломжтой. Дархан хотын аялал жуулчлал, зочид буудал, хоолны газар, үйл явдлын талаархи хамгийн сүүлийн үеийн мэдээ, зөвлөмжүүдийг эндээс олж авна уу.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="mn"
       className={`${lexend.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">{children}</body>
